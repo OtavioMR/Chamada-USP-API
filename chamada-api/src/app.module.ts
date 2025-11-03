@@ -7,6 +7,11 @@ import { QrCodeService } from './qr-code/qr-code.service';
 import { QrCodeModule } from './qr-code/qr-code.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProfessorModule } from './professor/professor.module';
+import { TurmaModule } from './turma/turma.module';
+import { MateriaModule } from './materia/materia.module';
+import { AlunoModule } from './aluno/aluno.module';
+import { PresencaModule } from './presenca/presenca.module';
 
 @Module({
   imports: [
@@ -23,6 +28,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
     QrCodeModule,
     ChamadaModule,
+    ProfessorModule,
+    TurmaModule,
+    MateriaModule,
+    AlunoModule,
+    PresencaModule,
   ],
   controllers: [AppController, QrCodeController],
   providers: [AppService, QrCodeService],
