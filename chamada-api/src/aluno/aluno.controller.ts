@@ -1,4 +1,8 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller } from '@nestjs/common';
+import { AlunoService } from './aluno.service';
 
 @Controller('aluno')
-export class AlunoController {}
+export class AlunoController {
+    constructor(private readonly alunoService: AlunoService) {}
+    
+}

@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ChamadaModule } from './chamada/chamada.module';
 import { QrCodeController } from './qr-code/qr-code.controller';
 import { QrCodeService } from './qr-code/qr-code.service';
 import { QrCodeModule } from './qr-code/qr-code.module';
@@ -12,6 +11,7 @@ import { TurmaModule } from './turma/turma.module';
 import { MateriaModule } from './materia/materia.module';
 import { AlunoModule } from './aluno/aluno.module';
 import { PresencaModule } from './presenca/presenca.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -27,12 +27,12 @@ import { PresencaModule } from './presenca/presenca.module';
       synchronize: true, // só para dev
     }),
     QrCodeModule,
-    ChamadaModule,
     ProfessorModule,
     TurmaModule,
     MateriaModule,
     AlunoModule,
     PresencaModule,
+    AuthModule,
   ],
   controllers: [AppController, QrCodeController],
   providers: [AppService, QrCodeService],
