@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Post, Get, UseGuards, Request, Param } from '@nestjs/common';
 import { TurmaService } from './turma.service';
 import { CreateTurmaDto } from './dto/create-turma.dto';
 import { throws } from 'assert';
@@ -22,5 +22,10 @@ export class TurmaController {
     @Post('entrar')
     entrarNaTurma(@Body() dto: EntrarTurmaDto, @Request()  req){
         return this.turmaService.entrarNaTurma(dto.codigoTurma, req.user.id);
+    }
+
+    @Get(':codigo/alunos')
+    async verAlunosDaTurma(@Param('codigo') codigo: string){
+        return this.turmaService.verAlunosDaTurma(codigo);
     }
 }

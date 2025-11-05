@@ -7,11 +7,13 @@ import { PassportModule } from '@nestjs/passport';
 import { ProfessorModule } from 'src/professor/professor.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
+import { AlunoModule } from 'src/aluno/aluno.module';
 
 @Module({
   imports:[
     ConfigModule,
     PassportModule,
+    AlunoModule,
     ProfessorModule,
     JwtModule.registerAsync({
       imports: [ConfigModule], 

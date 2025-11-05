@@ -17,6 +17,9 @@ export class Aluno {
   @Column({ unique: true })
   emailUSP: string;
 
+  @Column()
+  senha: string;
+
   // 👇 Um aluno pode estar em várias turmas, e uma turma pode ter vários alunos
   @ManyToMany(() => Turma, (turma) => turma.alunos, { eager: true })
   @JoinTable() // Cria a tabela intermediária aluno_turma
