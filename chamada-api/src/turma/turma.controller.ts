@@ -9,7 +9,7 @@ import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 
 @Controller('turma')
 export class TurmaController {
-    constructor(private readonly turmaService: TurmaService) {}
+    constructor(private readonly turmaService: TurmaService) { }
 
     @UseGuards(JwtAuthGuard)
     @Post('criar-turma')
@@ -20,12 +20,12 @@ export class TurmaController {
 
     @UseGuards(JwtAuthGuard)
     @Post('entrar')
-    entrarNaTurma(@Body() dto: EntrarTurmaDto, @Request()  req){
-        return this.turmaService.entrarNaTurma(dto.codigoTurma, req.user.id);
+    entrarNaTurma(@Body() dto: EntrarTurmaDto, @Request() req) {
+        return this.turmaService.entrarNaTurma(dto.codigoTurma, req.user.id, req.user.role);
     }
 
     @Get(':codigo/alunos')
-    async verAlunosDaTurma(@Param('codigo') codigo: string){
+    async verAlunosDaTurma(@Param('codigo') codigo: string) {
         return this.turmaService.verAlunosDaTurma(codigo);
     }
 }

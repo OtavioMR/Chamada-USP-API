@@ -28,7 +28,14 @@ export class AlunoService {
     }
 
     async findAll() {
-        return this.alunoRepository.find();
+        const alunos = await this.alunoRepository.find();
+
+        return alunos.map(aluno => ({
+            idAluno: aluno.id,
+            nomeCompleto: aluno.nomeCompleto,
+            emailUSP: aluno.emailUSP,
+            numeroUSP: aluno.numeroUSP,
+        }));
     }
 
     async findOne(alunoId: number) {
@@ -37,10 +44,10 @@ export class AlunoService {
             relations: ['turmas'],
         });
 
-        if(!aluno){
+        if (!aluno) {
             throw new NotFoundException('Aluno não encontrado');
         }
-        return aluno.turmas;
+        return aluno;
     }
 
     async findByEmail(emailUSP: string) {

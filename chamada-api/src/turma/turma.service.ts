@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Turma } from './entity/turma.entity';
 import { Repository } from 'typeorm';
@@ -38,7 +38,13 @@ export class TurmaService {
         return await this.turmaRepository.save(novaTurma);
     }
 
-    async entrarNaTurma(codigoTurma: string, idAluno: number) {
+    async entrarNaTurma(codigoTurma: string, idAluno: number, roleAluno: string) {
+
+        if (roleAluno !== 'aluno') {
+            throw new UnauthorizedException('Apenas alunos podem entrar em turmas');
+        }
+
+
         const aluno = await this.alunoRepository.findOne({ where: { id: idAluno } });
         if (!aluno) {
             throw new NotFoundException('Aluno não encontrado');

@@ -22,9 +22,9 @@ export class AuthService {
         const senhaInvalida = await bcrypt.compare(senha, professor.senha);
         if (!senhaInvalida) {
             throw new UnauthorizedException('Credenciais inválidas');
-        }
+        } 
 
-        const payload = { sub: professor.id, emailUSP: professor.emailUSP };
+        const payload = { sub: professor.id, emailUSP: professor.emailUSP, role: 'professor'};
         const token = this.jwtService.sign(payload);
 
         return {
