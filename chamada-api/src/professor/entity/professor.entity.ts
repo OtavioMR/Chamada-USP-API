@@ -9,12 +9,13 @@ export class Professor {
     @Column()
     nomeCompleto: string;
 
-    @Column({unique: true})
+    @Column({ unique: true })
     emailUSP: string;
 
     @Column()
     senha: string;
 
     @OneToMany(() => Turma, (turma) => turma.professor)
-    turmas: Turma;
+    turmas: Turma[];
+
 }

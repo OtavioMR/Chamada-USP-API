@@ -14,8 +14,7 @@ export class TurmaController {
     @UseGuards(JwtAuthGuard)
     @Post('criar-turma')
     create(@Body() dto: CreateTurmaDto, @Request() req) {
-        const professorId = req.user.id;
-        return this.turmaService.create(dto, professorId);
+        return this.turmaService.create(dto, req.user.id, req.user.role);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -28,4 +27,21 @@ export class TurmaController {
     async verAlunosDaTurma(@Param('codigo') codigo: string) {
         return this.turmaService.verAlunosDaTurma(codigo);
     }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('ver-turmas')
+    findAll(@Request() req) {
+        return this.turmaService.findAll(req.user.id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get(':codigo/chamada/:data')
+    verChamadaDaTurma(
+        @Request() req,
+        @Param('codigo') codigo: string,
+        @Param('data') data: string,
+    ) {
+        return this.turmaService.verChamadaTurma(req.user.id, codigo, data);
+    }
+
 }

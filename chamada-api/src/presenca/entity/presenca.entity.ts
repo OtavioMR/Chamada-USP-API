@@ -1,23 +1,30 @@
-import { Aluno } from "src/aluno/entity/aluno.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('Presenca')
+@Index(['emailAluno', 'codigoTurma', 'data'], {unique: true})
 export class Presenca {
-
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Column()
+    nomeAluno: string;
 
-    // Cada presença pertence a um aluno
-    @ManyToOne(() => Aluno, (aluno) => aluno.presencas, { onDelete: 'CASCADE' })
-    aluno: Aluno;
+    @Column()
+    emailAluno: string;
 
-    // Define se o aluno marcou presença (caso queira marcar faltas também)
-    @Column({ default: true })
-    presenca: boolean;
+    @Column()
+    numeroUSP: string;
+
+    @Column()
+    codigoTurma: string;
+
+    // Data da aula (dia específico da chamada)
+    @Column({ type: 'date' })
+    data: string;
 
     // Momento em que o aluno marcou presença
     @CreateDateColumn()
     dataHora: Date;
 
+    
 }
