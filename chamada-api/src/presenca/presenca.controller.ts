@@ -11,6 +11,8 @@ export class PresencaController {
     @UseGuards(JwtAuthGuard)
     @Post('marcar-presenca')
     create(@Body() dto: MarcarPresencaDto, @Request() req){
-        return this.presencaService.create(dto, req.user.id);
+        return this.presencaService.create(dto, req.user.id, req.user.role);
     }
+
+    
 }

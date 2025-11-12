@@ -1,4 +1,5 @@
 import { Aluno } from "src/aluno/entity/aluno.entity";
+import { Chamada } from "src/chamada/entity/chamada.entity";
 import { Professor } from "src/professor/entity/professor.entity";
 import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 

@@ -1,3 +1,5 @@
+import { channel } from "diagnostics_channel";
+import { Chamada } from "src/chamada/entity/chamada.entity";
 import { Turma } from "src/turma/entity/turma.entity";
 import { Collection, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -17,5 +19,8 @@ export class Professor {
 
     @OneToMany(() => Turma, (turma) => turma.professor)
     turmas: Turma[];
+
+    @OneToMany(()=> Chamada, (chamadas) => chamadas.professor)
+    chamadas: Chamada[];
 
 }

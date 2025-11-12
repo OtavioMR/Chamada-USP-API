@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('Presenca')
-@Index(['emailAluno', 'codigoTurma', 'data'], {unique: true})
+@Index(['emailAluno', 'codigoTurma', 'codigoChamada'], { unique: true })
 export class Presenca {
     @PrimaryGeneratedColumn()
     id: number;
@@ -16,6 +16,9 @@ export class Presenca {
     numeroUSP: string;
 
     @Column()
+    codigoChamada: string;
+
+    @Column()
     codigoTurma: string;
 
     // Data da aula (dia específico da chamada)
@@ -27,4 +30,6 @@ export class Presenca {
     dataHora: Date;
 
     
+
+
 }

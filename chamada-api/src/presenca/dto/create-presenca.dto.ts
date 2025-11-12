@@ -1,3 +1,3 @@
 export class MarcarPresencaDto{
-    codigoTurma: string;
+    codigoChamada: string;
 }

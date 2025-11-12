@@ -12,6 +12,7 @@ import { MateriaModule } from './materia/materia.module';
 import { AlunoModule } from './aluno/aluno.module';
 import { PresencaModule } from './presenca/presenca.module';
 import { AuthModule } from './auth/auth.module';
+import { ChamadaModule } from './chamada/chamada.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { AuthModule } from './auth/auth.module';
     AlunoModule,
     PresencaModule,
     AuthModule,
+    ChamadaModule,
   ],
   controllers: [AppController, QrCodeController],
   providers: [AppService, QrCodeService],
