@@ -14,6 +14,17 @@ export class AlunoService {
     ) { }
 
     async create(dto: CreateAlunoDto) {
+
+        if (dto.nomeCompleto == "" || dto.emailUSP == "" || dto.senha == "" || dto.numeroUSP == "") {
+            throw new ConflictException("Dados incompletos para cadastro!");
+        }
+
+        const regexUSP = /^[\w.-]+@usp\.br$/i; // verifica se termina com @usp.br
+        if (!regexUSP.test(dto.emailUSP)) {
+            throw new ConflictException("Somente emails @usp.br são permitidos");
+        }
+
+
         const emailExistente = await this.alunoRepository.findOne({ where: { emailUSP: dto.emailUSP } });
         if (emailExistente) {
             throw new ConflictException('Email já cadastrado');

@@ -12,7 +12,6 @@ export class ProfessorController {
         return this.professorService.create(dto);
     }
 
-    @UseGuards(JwtAuthGuard)
     @Get('Professores-Cadastrados')
     findAll(){
         return this.professorService.findAll();

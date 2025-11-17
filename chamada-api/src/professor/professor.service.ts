@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Professor } from './entity/professor.entity';
-import { Repository } from 'typeorm';
+import { MongoInvalidArgumentError, Repository } from 'typeorm';
 import { CreateProfessorDto } from './dto/create-professor.dto';
 import { randomInt } from 'crypto';
 import * as bcrypt from 'bcrypt';
@@ -11,11 +11,22 @@ export class ProfessorService {
     constructor(
         @InjectRepository(Professor)
         private professorRepository: Repository<Professor>,
-    ) {}
+    ) { }
 
-    async create(dto: CreateProfessorDto){
-        const emailExistente = await this.professorRepository.findOne({where: {emailUSP: dto.emailUSP}});
-        if (emailExistente){
+    async create(dto: CreateProfessorDto) {
+
+        if (dto.nomeCompleto == "" || dto.emailUSP == "" || dto.senha == "") {
+            throw new ConflictException("Dados incompletos para cadastro!");
+        }
+
+        const regexUSP = /^[\w.-]+@usp\.br$/i; // verifica se termina com @usp.br
+        if (!regexUSP.test(dto.emailUSP)) {
+            throw new ConflictException("Somente emails @usp.br são permitidos");
+        }
+
+
+        const emailExistente = await this.professorRepository.findOne({ where: { emailUSP: dto.emailUSP } });
+        if (emailExistente) {
             throw new ConflictException("Email já cadastrado!");
         }
 
@@ -27,12 +38,12 @@ export class ProfessorService {
         return this.professorRepository.save(professor);
     }
 
-    async findAll(){
+    async findAll() {
         return this.professorRepository.find();
     }
 
-    async findOne(id: number){
-        const professor = await this.professorRepository.findOne({where: {id}});
+    async findOne(id: number) {
+        const professor = await this.professorRepository.findOne({ where: { id } });
         if (!professor) {
             throw new NotFoundException('Professor não encontrado');
         }
@@ -40,7 +51,7 @@ export class ProfessorService {
         return professor;
     }
 
-    async findByEmail(emailUSP: string){
-        return this.professorRepository.findOne({where: {emailUSP}});
+    async findByEmail(emailUSP: string) {
+        return this.professorRepository.findOne({ where: { emailUSP } });
     }
 }
