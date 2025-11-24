@@ -10,21 +10,24 @@ import { JwtStrategy } from './jwt.strategy';
 import { AlunoModule } from 'src/aluno/aluno.module';
 
 @Module({
-  imports:[
-    ConfigModule,
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     PassportModule,
     AlunoModule,
     ProfessorModule,
     JwtModule.registerAsync({
-      imports: [ConfigModule], 
+      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get('JWT_SECRET'),
-        signOptions: {expiresIn: '1h'},
+        signOptions: { expiresIn: '1h' },
       }),
     }),
   ],
+
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy]
 })
-export class AuthModule {}
+export class AuthModule { }

@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Professor } from './entity/professor.entity';
 import { MongoInvalidArgumentError, Repository } from 'typeorm';
@@ -42,14 +42,23 @@ export class ProfessorService {
         return this.professorRepository.find();
     }
 
-    async findOne(id: number) {
-        const professor = await this.professorRepository.findOne({ where: { id } });
+    async findOne(professorId: number, role: string) {
+
+        if(role !== "Professor"){
+            throw new UnauthorizedException("Somente professores!");
+        }
+
+        const professor = await this.professorRepository.findOne({
+            where: { id: professorId }
+        });
+
         if (!professor) {
-            throw new NotFoundException('Professor não encontrado');
+            throw new NotFoundException("Professor não encontrado");
         }
 
         return professor;
     }
+
 
     async findByEmail(emailUSP: string) {
         return this.professorRepository.findOne({ where: { emailUSP } });

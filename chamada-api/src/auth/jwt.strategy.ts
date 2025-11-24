@@ -21,22 +21,22 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: any) {
     // Verifica o tipo de usuário
-    if (payload.role === 'aluno') {
+    if (payload.role === 'Aluno') {
       const aluno = await this.alunoService.findOne(payload.sub);
       if (!aluno) {
         throw new UnauthorizedException('Aluno não encontrado');
       }
       const { senha, ...result } = aluno;
-      return { ...result, role: 'aluno' };
+      return { ...result, role: 'Aluno' };
     }
 
-    if (payload.role === 'professor') {
-      const professor = await this.professorService.findOne(payload.sub);
+    if (payload.role === 'Professor') {
+      const professor = await this.professorService.findOne(payload.sub, payload.role);
       if (!professor) {
         throw new UnauthorizedException('Professor não encontrado');
       }
       const { senha, ...result } = professor;
-      return { ...result, role: 'professor' };
+      return { ...result, role: 'Professor' };
     }
 
     // Caso o payload não tenha um role válido

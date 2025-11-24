@@ -24,7 +24,7 @@ export class AuthService {
             throw new UnauthorizedException('Credenciais inválidas');
         } 
 
-        const payload = { sub: professor.id, emailUSP: professor.emailUSP, role: 'professor'};
+        const payload = { sub: professor.id, emailUSP: professor.emailUSP, role: 'Professor'};
         const token = this.jwtService.sign(payload);
 
         return {
@@ -46,7 +46,7 @@ export class AuthService {
             throw new UnauthorizedException('Credenciais inválidas');
         }
 
-        const payload = { sub: aluno.id, role: 'aluno'};
+        const payload = { sub: aluno.id, role: 'Aluno'};
         const token = this.jwtService.sign(payload);
 
         return {

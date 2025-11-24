@@ -1,7 +1,8 @@
-import { Body, Controller, Post, Get, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Get, Param, UseGuards, Request} from '@nestjs/common';
 import { ProfessorService } from './professor.service';
 import { CreateProfessorDto } from './dto/create-professor.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('professor')
 export class ProfessorController {
@@ -17,8 +18,10 @@ export class ProfessorController {
         return this.professorService.findAll();
     }
 
-    @Get('id/:id')
-    findOne(@Param('id') id: number) {
-        return this.professorService.findOne(id);
+
+    @UseGuards(JwtAuthGuard)
+    @Get('me')
+    findOne(@Request() req) {
+        return this.professorService.findOne(req.user.id, req.user.role);
     }
 }
