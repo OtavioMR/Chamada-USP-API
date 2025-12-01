@@ -23,7 +23,11 @@ export class TurmaService {
 
     async create(dto: CreateTurmaDto, idProfessor: number, role: string) {
 
-        if (role !== 'professor') {
+        if(dto.nomeCurso === "" || dto.semestre === "" || dto.semestre === ""){
+            throw new ConflictException("Todos os dados devem ser preenchidos!");
+        }
+
+        if (role !== 'Professor') {
             throw new UnauthorizedException('Somente professores podem criar turmas!');
         }
 
