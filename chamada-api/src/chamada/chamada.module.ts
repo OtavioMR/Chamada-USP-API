@@ -6,9 +6,10 @@ import { Chamada } from './entity/chamada.entity';
 import { Professor } from 'src/professor/entity/professor.entity';
 import { Turma } from 'src/turma/entity/turma.entity';
 import { Presenca } from 'src/presenca/entity/presenca.entity';
+import { Materia } from 'src/materia/entity/materia.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Chamada, Professor, Turma, Presenca])],
+  imports: [TypeOrmModule.forFeature([Chamada, Professor, Turma, Presenca, Materia])],
   controllers: [ChamadaController],
   providers: [ChamadaService],
   exports:[ChamadaService],

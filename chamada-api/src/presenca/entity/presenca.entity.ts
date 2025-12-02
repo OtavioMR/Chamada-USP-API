@@ -1,8 +1,11 @@
-import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Aluno } from "src/aluno/entity/aluno.entity";
+import { Chamada } from "src/chamada/entity/chamada.entity";
+import { Turma } from "src/turma/entity/turma.entity";
 
-@Entity('Presenca')
-@Index(['emailAluno', 'codigoTurma', 'codigoChamada'], { unique: true })
+@Entity('Presencas')
 export class Presenca {
+
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -10,26 +13,30 @@ export class Presenca {
     nomeAluno: string;
 
     @Column()
-    emailAluno: string;
+    numeroUSP: string;
 
     @Column()
-    numeroUSP: string;
+    codigoTurma: string;
 
     @Column()
     codigoChamada: string;
 
     @Column()
-    codigoTurma: string;
+    emailAluno: string;
 
-    // Data da aula (dia específico da chamada)
     @Column({ type: 'date' })
-    data: string;
+    data: Date;
 
-    // Momento em que o aluno marcou presença
-    @CreateDateColumn()
+
+    @Column({ type: 'timestamp' })
     dataHora: Date;
 
-    
+    @ManyToOne(() => Aluno, aluno => aluno.presencas)
+    aluno: Aluno;
 
+    @ManyToOne(() => Turma, turma => turma.chamadas)
+    turma: Turma;
 
+    @ManyToOne(() => Chamada, chamada => chamada.presencas)
+    chamada: Chamada;
 }

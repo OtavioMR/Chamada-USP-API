@@ -25,7 +25,7 @@ export class PresencaService {
     ) { }
 
     async create(dto: MarcarPresencaDto, alunoId: number, role: string) {
-        if (role !== 'aluno')
+        if (role !== 'Aluno')
             throw new UnauthorizedException('Somente alunos podem marcar presença');
 
         const aluno = await this.alunoRepository.findOne({ where: { id: alunoId } });
@@ -34,12 +34,13 @@ export class PresencaService {
         // 1️⃣ Verifica se a chamada existe
         const chamada = await this.chamadaRepository.findOne({
             where: { codigoChamada: dto.codigoChamada },
+            relations: ['turma', 'materia', 'professor']
         });
         if (!chamada) throw new NotFoundException('Chamada não encontrada');
 
         // 2️⃣ Busca a turma da chamada
         const turma = await this.turmaRepository.findOne({
-            where: { codigo: chamada.codigoTurma },
+            where: { codigo: chamada.turma.codigo },
             relations: ['alunos'],
         });
         if (!turma) throw new NotFoundException('Turma não encontrada');
@@ -49,23 +50,33 @@ export class PresencaService {
         if (!alunoTurma)
             throw new UnauthorizedException('Aluno não está matriculado nessa turma');
 
-        // 4️⃣ Data de hoje (sem horário)
-        const dataHoje = new Date().toISOString().split('T')[0];
+        const hoje = new Date();
 
-        // 5️⃣ Verifica se já marcou presença nessa chamada
+        const dataHoje = hoje.toISOString().split('T')[0];
+        
+        hoje.setHours(0, 0, 0, 0);
+
         const presencaExistente = await this.presencaRepository.findOne({
             where: {
                 emailAluno: aluno.emailUSP,
                 codigoChamada: dto.codigoChamada,
-                data: dataHoje,
+                data: hoje,
             },
         });
+
+       
+
+
 
         if (presencaExistente)
             throw new ConflictException('Presença já registrada para essa chamada.');
 
         // 6️⃣ Cria a presença
         const presenca = this.presencaRepository.create({
+            aluno: aluno,
+            chamada: chamada,
+            turma: turma,
+
             nomeAluno: aluno.nomeCompleto,
             numeroUSP: aluno.numeroUSP,
             codigoTurma: turma.codigo,
@@ -75,9 +86,10 @@ export class PresencaService {
             dataHora: new Date(),
         });
 
+
         return await this.presencaRepository.save(presenca);
     }
 
-    
+
 
 }

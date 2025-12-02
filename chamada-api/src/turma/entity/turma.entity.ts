@@ -1,7 +1,8 @@
 import { Aluno } from "src/aluno/entity/aluno.entity";
 import { Chamada } from "src/chamada/entity/chamada.entity";
+import { Materia } from "src/materia/entity/materia.entity";
 import { Professor } from "src/professor/entity/professor.entity";
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('Turmas')
 export class Turma {
@@ -12,7 +13,7 @@ export class Turma {
     @Column()
     nomeCurso: string;
 
-    @Column({unique: true})
+    @Column({ unique: true })
     codigo: string;
 
     @Column()
@@ -21,9 +22,21 @@ export class Turma {
     @Column()
     semestre: string;
 
-    @ManyToOne(() => Professor, (professor) => professor.turmas)
+    @ManyToOne(() => Professor, professor => professor.turmas, { eager: true })
     professor: Professor;
 
-    @ManyToMany(() => Aluno, (aluno) => aluno.turmas)
+    @ManyToMany(() => Aluno, aluno => aluno.turmas)
+    @JoinTable()
     alunos: Aluno[];
+
+    @OneToMany(() => Chamada, chamada => chamada.turma)
+    chamadas: Chamada[];
+
+    @ManyToMany(() => Materia, materia => materia.turmas)
+    @JoinTable()
+    materias: Materia[];
+
+    @Column({ type: 'date' })
+    data: Date;
+
 }

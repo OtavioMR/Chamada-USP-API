@@ -1,30 +1,29 @@
-import { channel } from "diagnostics_channel";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Turma } from "src/turma/entity/turma.entity";
 import { Chamada } from "src/chamada/entity/chamada.entity";
 import { Materia } from "src/materia/entity/materia.entity";
-import { Turma } from "src/turma/entity/turma.entity";
-import { Collection, Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('Professores')
 export class Professor {
-    @PrimaryGeneratedColumn()
-    id: number;
 
-    @Column()
-    nomeCompleto: string;
+  @PrimaryGeneratedColumn()
+  id: number
 
-    @Column({ unique: true })
-    emailUSP: string;
+  @Column()
+  nomeCompleto: string
 
-    @Column()
-    senha: string;
+  @Column({ unique: true })
+  emailUSP: string
 
-    @OneToMany(() => Turma, (turma) => turma.professor)
-    turmas: Turma[];
+  @Column()
+  senha: string
 
-    @OneToMany(()=> Chamada, (chamadas) => chamadas.professor)
-    chamadas: Chamada[];
+  @OneToMany(() => Turma, turma => turma.professor)
+  turmas: Turma[]
 
-    @OneToMany(() => Materia, (materias) => materias.professor)
-    materias: Materia[];
+  @OneToMany(() => Chamada, chamada => chamada.professor)
+  chamadas: Chamada[]
 
+  @OneToMany(() => Materia, materia => materia.professor)
+  materias: Materia[]
 }

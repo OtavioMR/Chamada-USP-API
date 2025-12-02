@@ -7,6 +7,7 @@ import { CreateTurmaDto } from './dto/create-turma.dto';
 import { Professor } from 'src/professor/entity/professor.entity';
 import { CreateAlunoDto } from 'src/aluno/dto/create-aluno.dto';
 import { Presenca } from 'src/presenca/entity/presenca.entity';
+import { Materia } from 'src/materia/entity/materia.entity';
 
 @Injectable()
 export class TurmaService {
@@ -19,12 +20,14 @@ export class TurmaService {
         private professorRepository: Repository<Professor>,
         @InjectRepository(Presenca)
         private presencaRepository: Repository<Presenca>,
+        @InjectRepository(Materia)
+        private materiasRepository: Repository<Materia>,
     ) { }
 
     async create(dto: CreateTurmaDto, idProfessor: number, role: string) {
-
-        if(dto.nomeCurso === "" || dto.semestre === "" || dto.semestre === ""){
-            throw new ConflictException("Todos os dados devem ser preenchidos!");
+        // Validação básica
+        if (!dto.nomeCurso || !dto.ano || !dto.semestre) {
+            throw new ConflictException("Todos os campos são obrigatórios!");
         }
 
         if (role !== 'Professor') {
@@ -33,54 +36,69 @@ export class TurmaService {
 
         const professor = await this.professorRepository.findOne({
             where: { id: idProfessor },
+            relations: ['materias'],
         });
 
         if (!professor) {
             throw new NotFoundException('Professor não encontrado');
         }
 
+        // FORÇA SER ARRAY SEMPRE
+        const materiasIdsSelecionadas = Array.isArray(dto.materiasIds)
+            ? dto.materiasIds
+            : [];   // ← se não for array, vira vazio
+
+        // Agora .includes nunca vai quebrar
+        const materiasValidas = professor.materias.filter(materia =>
+            materiasIdsSelecionadas.includes(materia.id)
+        );
+
+
+        // Se mandou IDs que não existem nas matérias do professor → avisa
+        const idsInvalidos = materiasIdsSelecionadas.filter(
+            id => !professor.materias.some(m => m.id === id)
+        );
+        if (idsInvalidos.length > 0) {
+            throw new ConflictException(`Você não leciona as matérias: ${idsInvalidos.join(', ')}`);
+        }
 
         const codigoGerado = await this.gerarCodigoUnico();
 
         const novaTurma = this.turmaRepository.create({
-            nomeCurso: dto.nomeCurso,
+            nomeCurso: dto.nomeCurso.trim(),
             codigo: codigoGerado,
             ano: dto.ano,
             semestre: dto.semestre,
+            data: new Date(),
             professor: professor,
-        });
+            materias: materiasValidas,
+        } as Turma);   // ← ESSA LINHA RESOLVE TUDO
 
         return await this.turmaRepository.save(novaTurma);
-
     }
-
     private async gerarCodigoUnico(): Promise<string> {
-        const caracteresPermitidos = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-        let codigo: string;
-        let existe: boolean;
+        const caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         let tentativa = 0;
 
-        while (tentativa < 10) {
-            tentativa++;
-            codigo = "";
-            for (let i = 0; i < 4; i++) {
-                const indiceAleatorio = Math.floor(Math.random() * caracteresPermitidos.length);
-                codigo += caracteresPermitidos.charAt(indiceAleatorio);
+        while (tentativa < 20) { // aumentei pra 20 por segurança
+            let codigo = "";
+            for (let i = 0; i < 6; i++) { // 6 caracteres fica melhor
+                codigo += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
             }
 
             const existe = await this.turmaRepository.findOne({ where: { codigo } });
             if (!existe) {
                 return codigo;
             }
+            tentativa++;
         }
 
-        throw new Error("Falha ao gerar código único após 10 tentativas");
+        throw new Error("Não foi possível gerar um código único");
     }
 
     async entrarNaTurma(codigoTurma: string, idAluno: number, roleAluno: string) {
 
-        if (roleAluno !== 'aluno') {
+        if (roleAluno !== 'Aluno') {
             throw new UnauthorizedException('Apenas alunos podem entrar em turmas');
         }
 
@@ -154,10 +172,14 @@ export class TurmaService {
         }
 
         // Busca todas as presenças registradas para essa turma e data
+        const dataConvertida = new Date(data);
+        dataConvertida.setHours(0, 0, 0, 0);
+
         const presencas = await this.presencaRepository.find({
-            where: { codigoTurma, data },
+            where: { codigoTurma, data: dataConvertida },
             order: { nomeAluno: 'ASC' },
         });
+
 
         // Mapeia o resultado em um formato amigável
         return presencas.map(p => ({
