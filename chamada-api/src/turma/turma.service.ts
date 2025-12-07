@@ -73,6 +73,9 @@ export class TurmaService {
             professor: professor,
             materias: materiasValidas,
         } as Turma);   // ← ESSA LINHA RESOLVE TUDO
+        console.log("Recebido:", dto.materiasIds);
+console.log("Validas:", materiasValidas.map(m => m.nomeMateria));
+
 
         return await this.turmaRepository.save(novaTurma);
     }
@@ -150,7 +153,10 @@ export class TurmaService {
     }
 
     async findAll(professorId: number) {
-        const professor = await this.professorRepository.findOne({ where: { id: professorId }, relations: ['turmas'] });
+        const professor = await this.professorRepository.findOne({
+            where: { id: professorId },
+            relations: ['turmas', 'turmas.materias']
+        });
         return professor;
     }
 
