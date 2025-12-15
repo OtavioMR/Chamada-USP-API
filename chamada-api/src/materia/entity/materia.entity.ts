@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Professor } from "src/professor/entity/professor.entity";
 import { Turma } from "src/turma/entity/turma.entity";
 import { Chamada } from "src/chamada/entity/chamada.entity";
@@ -15,8 +15,10 @@ export class Materia {
   @ManyToOne(() => Professor, professor => professor.materias)
   professor: Professor
 
-  @ManyToMany(() => Turma, turma => turma.materias)
+  // Materia entity
+  @OneToMany(() => Turma, turma => turma.materia)
   turmas: Turma[]
+
 
   @OneToMany(() => Chamada, chamada => chamada.materia)
   chamadas: Chamada[]

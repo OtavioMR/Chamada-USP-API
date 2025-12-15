@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Aluno } from './entity/aluno.entity';
 import { Repository } from 'typeorm';
@@ -63,5 +63,17 @@ export class AlunoService {
 
     async findByEmail(emailUSP: string) {
         return this.alunoRepository.findOne({ where: { emailUSP } });
+    }
+
+    async meusDados(idAluno: number, role : string) {
+        // if (role != "Aluno") throw new UnauthorizedException("Somente o aluno pode ver seus dados");
+
+        const alunoExistente = await this.alunoRepository.findOne({
+            where: { id: idAluno}
+        });
+
+        if (!alunoExistente) throw new NotFoundException("Aluno não encontrado!");
+
+        return alunoExistente;
     }
 }

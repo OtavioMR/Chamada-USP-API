@@ -7,11 +7,15 @@ import { Professor } from 'src/professor/entity/professor.entity';
 import { Turma } from 'src/turma/entity/turma.entity';
 import { Presenca } from 'src/presenca/entity/presenca.entity';
 import { Materia } from 'src/materia/entity/materia.entity';
+import { QrCodeModule } from 'src/qr-code/qr-code.module';
+import { forwardRef } from '@nestjs/common';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Chamada, Professor, Turma, Presenca, Materia])],
+  imports: [TypeOrmModule.forFeature([Chamada, Professor, Turma, Presenca, Materia]),
+    forwardRef(() => QrCodeModule),
+  ],
   controllers: [ChamadaController],
   providers: [ChamadaService],
-  exports:[ChamadaService],
+  exports: [ChamadaService],
 })
-export class ChamadaModule {}
+export class ChamadaModule { }

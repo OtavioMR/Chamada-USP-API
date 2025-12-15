@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Materia } from './entity/materia.entity';
 import { CreateMateriaDto } from './dto/create-materia.dto';
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 import { Professor } from 'src/professor/entity/professor.entity';
 
 @Injectable()
@@ -29,7 +28,6 @@ export class MateriaService {
         return await this.materiaRepository.save(novaMateria);
 
     }
-
 
     async findAll(idProfessor: number, role: string){
         const professor = await this.professorRepository.findOne({

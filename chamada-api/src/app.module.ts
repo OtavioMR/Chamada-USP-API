@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { QrCodeController } from './qr-code/qr-code.controller';
-import { QrCodeService } from './qr-code/qr-code.service';
 import { QrCodeModule } from './qr-code/qr-code.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -36,7 +34,7 @@ import { ChamadaModule } from './chamada/chamada.module';
     AuthModule,
     ChamadaModule,
   ],
-  controllers: [AppController, QrCodeController],
-  providers: [AppService, QrCodeService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule { }

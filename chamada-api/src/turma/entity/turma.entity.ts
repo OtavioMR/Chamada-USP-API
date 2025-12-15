@@ -2,7 +2,7 @@ import { Aluno } from "src/aluno/entity/aluno.entity";
 import { Chamada } from "src/chamada/entity/chamada.entity";
 import { Materia } from "src/materia/entity/materia.entity";
 import { Professor } from "src/professor/entity/professor.entity";
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('Turmas')
 export class Turma {
@@ -32,9 +32,10 @@ export class Turma {
     @OneToMany(() => Chamada, chamada => chamada.turma)
     chamadas: Chamada[];
 
-    @ManyToMany(() => Materia, materia => materia.turmas)
-    @JoinTable()
-    materias: Materia[];
+    // Turma entity
+    @ManyToOne(() => Materia, materia => materia.turmas, { eager: true })
+    materia: Materia;
+
 
     @Column({ type: 'date' })
     data: Date;

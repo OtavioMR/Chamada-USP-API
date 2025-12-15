@@ -27,7 +27,6 @@ export class Presenca {
     @Column({ type: 'date' })
     data: Date;
 
-
     @Column({ type: 'timestamp' })
     dataHora: Date;
 

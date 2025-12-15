@@ -13,9 +13,6 @@ export class Chamada {
     @Column({ unique: true })
     codigoChamada: string;
 
-    @Column({ type: 'date' })
-    data: Date;
-
     @ManyToOne(() => Turma, turma => turma.chamadas)
     turma: Turma;
 

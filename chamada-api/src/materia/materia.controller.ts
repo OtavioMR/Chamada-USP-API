@@ -5,7 +5,7 @@ import { CreateMateriaDto } from './dto/create-materia.dto';
 
 @Controller('materia')
 export class MateriaController {
-    constructor(private readonly materiaService: MateriaService) {}
+    constructor(private readonly materiaService: MateriaService) { }
 
     @UseGuards(JwtAuthGuard)
     @Post('cadastrar-materia')
@@ -13,9 +13,10 @@ export class MateriaController {
         return this.materiaService.cadastrarMateria(dto, req.user.id, req.user.role);
     }
 
+
     @UseGuards(JwtAuthGuard)
     @Get('minhas-materias')
-    findAll(@Request() req){
+    findAll(@Request() req) {
         return this.materiaService.findAll(req.user.id, req.user.role);
     }
 }
