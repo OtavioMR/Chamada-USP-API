@@ -9,6 +9,7 @@ import { v4 as uuid } from 'uuid';
 import { VerListaDePresencasDto } from './dto/verChamada.dto';
 import { Presenca } from 'src/presenca/entity/presenca.entity';
 import { Materia } from 'src/materia/entity/materia.entity';
+import { all } from 'axios';
 
 @Injectable()
 export class ChamadaService {
@@ -55,8 +56,8 @@ export class ChamadaService {
         return await this.chamadaRepository.save(chamada);
     }
 
-    async verListaDePresencas(dto: VerListaDePresencasDto, idProfessor: number) {
-        const { codigoChamada } = dto;
+    async verListaDePresencas(idProfessor: number, codigo: string) {
+        const codigoChamada = codigo;
 
         const chamada = await this.chamadaRepository.findOne({
             where: {
@@ -80,6 +81,7 @@ export class ChamadaService {
             turmaCodigo: chamada.turma?.codigo,
             materia: chamada.materia?.nomeMateria,
             totalPresentes: presencas.length,
+            nomeCurso: chamada.turma.nomeCurso,
             alunos: presencas.map((p) => ({
                 nome: p.nomeAluno,
                 email: p.emailAluno,
@@ -163,5 +165,35 @@ export class ChamadaService {
             materia: chamada.turma.materia?.nomeMateria || 'Não informada',
             codigoChamada: chamada.codigoChamada,
         };
+    }
+
+    async findAllRollCall(idProfessor: number, role: string) {
+        if (role !== 'Professor') throw new UnauthorizedException("Somente professores!");
+
+        const professor = await this.professorRepository.findOne({
+            where: { id: idProfessor }
+        })
+
+        if (!professor) throw new NotFoundException("Professor não encontrado!");
+
+        const chamadas = await this.chamadaRepository
+            .createQueryBuilder('chamada')
+            .leftJoin('chamada.professor', 'professor')
+            .leftJoin('chamada.presencas', 'presenca')
+            .leftJoin('chamada.turma', 'turma')
+            .select([
+                'chamada.id',
+                'chamada.criadaEm',
+                'chamada.codigoChamada',
+                'turma.nomeCurso',
+                // 'presenca.nomeAluno',
+                // 'presenca.emailAluno',
+                // 'presenca.dataHora'
+            ])
+            .where('professor.id = :idProfessor', { idProfessor })
+            .getMany();
+
+        return chamadas;
+
     }
 }

@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateAlunoDto } from './dto/create-aluno.dto';
 import { randomInt } from 'node:crypto';
 import * as bcrypt from 'bcrypt';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class AlunoService {
@@ -24,11 +25,16 @@ export class AlunoService {
             throw new ConflictException("Somente emails @usp.br são permitidos");
         }
 
-
         const emailExistente = await this.alunoRepository.findOne({ where: { emailUSP: dto.emailUSP } });
         if (emailExistente) {
             throw new ConflictException('Email já cadastrado');
         }
+
+        const numeroUSPExistente = await this.alunoRepository.findOne({
+            where: {numeroUSP: dto.numeroUSP}
+        })
+
+        if(numeroUSPExistente) throw new ConflictException("Número USP já cadastrado!")
 
         const randomSalt = await randomInt(10, 13);
         const senhaCriptografada = await bcrypt.hash(dto.senha, randomSalt);

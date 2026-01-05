@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards, Request, Get, Patch, Query } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Request, Get, Patch, Query, Param } from '@nestjs/common';
 import { ChamadaService } from './chamada.service';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { CreateChamadaDto } from './dto/create-chamada.dto';
@@ -29,9 +29,9 @@ export class ChamadaController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('lista-presencas')
-    verListaDePresencas(@Body() dto: VerListaDePresencasDto, @Request() req) {
-        return this.chamadaService.verListaDePresencas(dto, req.user.id)
+    @Get('lista-presencas/:codigo')
+    verListaDePresencas(@Request() req, @Param("codigo") codigo: string) {
+        return this.chamadaService.verListaDePresencas(req.user.id, codigo);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -41,7 +41,13 @@ export class ChamadaController {
     }
 
     @Get('codigo-turma')
-    verCodigoTurma(@Query('codigoChamada') codigoChamada){
+    verCodigoTurma(@Query('codigoChamada') codigoChamada) {
         return this.chamadaService.verCodigoTurma(codigoChamada);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('buscar-chamadas')
+    findAllRollCall(@Request() req) {
+        return this.chamadaService.findAllRollCall(req.user.id, req.user.role)
     }
 }
