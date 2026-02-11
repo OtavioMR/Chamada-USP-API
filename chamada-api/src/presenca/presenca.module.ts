@@ -6,10 +6,10 @@ import { Presenca } from './entity/presenca.entity';
 import { Turma } from 'src/turma/entity/turma.entity';
 import { Aluno } from 'src/aluno/entity/aluno.entity';
 import { Chamada } from 'src/chamada/entity/chamada.entity';
-import { Professor } from 'src/professor/entity/professor.entity';
+import { ChamadaJanela } from 'src/chamada-janela/entity/chamada-janela.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Presenca, Turma, Aluno, Chamada])],
+  imports: [TypeOrmModule.forFeature([Presenca, Turma, Aluno, Chamada, ChamadaJanela])],
   controllers: [PresencaController],
   providers: [PresencaService],
   exports: [PresencaService],

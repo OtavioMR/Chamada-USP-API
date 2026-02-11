@@ -3,6 +3,7 @@ import { Turma } from "src/turma/entity/turma.entity";
 import { Professor } from "src/professor/entity/professor.entity";
 import { Presenca } from "src/presenca/entity/presenca.entity";
 import { Materia } from "src/materia/entity/materia.entity";
+import { ChamadaJanela } from "src/chamada-janela/entity/chamada-janela.entity";
 
 @Entity('Chamadas')
 export class Chamada {
@@ -30,5 +31,8 @@ export class Chamada {
 
     @Column({ default: true })
     aberta: boolean;
+
+    @OneToMany(() => ChamadaJanela, janela => janela.chamada)
+    janelas: ChamadaJanela[];
 
 }
