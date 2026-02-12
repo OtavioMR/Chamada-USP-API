@@ -9,6 +9,7 @@ import { CreateQRCodeDto } from './dto/create-qrCode.dto';
 import { ChamadaService } from 'src/chamada/chamada.service';
 import { Chamada } from 'src/chamada/entity/chamada.entity';
 import { ChamadaJanela } from 'src/chamada-janela/entity/chamada-janela.entity';
+import { fecharChamadaDto } from './dto/update-qrCode.dto';
 
 @Injectable()
 export class QrCodeService {
@@ -41,7 +42,7 @@ export class QrCodeService {
     }
 
     const agora = new Date();
-    const limite24h = 24 * 60 * 60 * 1000;
+    const limite24h = 12 * 60 * 60 * 1000;
 
     /**
      * 1️⃣ Buscar chamada aberta da turma
