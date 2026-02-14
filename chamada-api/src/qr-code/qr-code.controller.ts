@@ -1,8 +1,9 @@
-import { Body, Controller, Post, Get, Res, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Post, Get, Res, UseGuards, Request, Put } from '@nestjs/common';
 import type { Response } from 'express';
 import { QrCodeService } from './qr-code.service';
 import { CreateQRCodeDto } from './dto/create-qrCode.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { fecharChamadaDto } from './dto/update-qrCode.dto';
 
 @Controller('qr-code')
 export class QrCodeController {

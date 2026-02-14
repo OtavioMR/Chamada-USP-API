@@ -191,6 +191,7 @@ export class ChamadaService {
                 // 'presenca.dataHora'
             ])
             .where('professor.id = :idProfessor', { idProfessor })
+            .orderBy('chamada.criadaEm','DESC')
             .getMany();
 
         return chamadas;

@@ -11,6 +11,8 @@ import { AlunoModule } from './aluno/aluno.module';
 import { PresencaModule } from './presenca/presenca.module';
 import { AuthModule } from './auth/auth.module';
 import { ChamadaModule } from './chamada/chamada.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { ChamadaJanelaModule } from './chamada-janela/chamada-janela.module';
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { ChamadaModule } from './chamada/chamada.module';
     PresencaModule,
     AuthModule,
     ChamadaModule,
+    ScheduleModule.forRoot(),
+    ChamadaJanelaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
